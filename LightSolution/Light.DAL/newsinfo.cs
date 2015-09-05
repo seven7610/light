@@ -1,0 +1,250 @@
+﻿using System; 
+using System.Text;
+using System.Data.SqlClient;
+using System.Collections.Generic;
+using Light.Command;
+using MySql.Data.MySqlClient;
+using System.Data;
+
+namespace Light.DAL  
+	
+{
+	 	//newsinfo
+		public partial class newsinfo
+	{
+   		     
+		public bool Exists(int id)
+		{
+			StringBuilder strSql=new StringBuilder();
+			strSql.Append("select count(1) from newsinfo");
+			strSql.Append(" where ");
+			                                       strSql.Append(" id = @id  ");
+                            			MySqlParameter[] parameters = {
+					new MySqlParameter("@id", MySqlDbType.Int32,10)			};
+			parameters[0].Value = id;
+
+			return DbHelperMySQL.Exists(strSql.ToString(),parameters);
+		}
+		
+				
+		
+		/// <summary>
+		/// 增加一条数据
+		/// </summary>
+		public void Add(Light.Model.newsinfo model)
+		{
+			StringBuilder strSql=new StringBuilder();
+			strSql.Append("insert into newsinfo(");			
+            strSql.Append("id,title,content,subtitle,isread,ishot,createman,createtime");
+			strSql.Append(") values (");
+            strSql.Append("@id,@title,@content,@subtitle,@isread,@ishot,@createman,@createtime");            
+            strSql.Append(") ");            
+            		
+			MySqlParameter[] parameters = {
+			            new MySqlParameter("@id", MySqlDbType.Int32,10) ,            
+                        new MySqlParameter("@title", MySqlDbType.VarChar,500) ,            
+                        new MySqlParameter("@content", MySqlDbType.VarChar,500) ,            
+                        new MySqlParameter("@subtitle", MySqlDbType.VarChar,500) ,            
+                        new MySqlParameter("@isread", MySqlDbType.Bit) ,            
+                        new MySqlParameter("@ishot", MySqlDbType.Bit) ,            
+                        new MySqlParameter("@createman", MySqlDbType.Int32,10) ,            
+                        new MySqlParameter("@createtime", MySqlDbType.DateTime)             
+              
+            };
+			            
+            parameters[0].Value = model.id;                        
+            parameters[1].Value = model.title;                        
+            parameters[2].Value = model.content;                        
+            parameters[3].Value = model.subtitle;                        
+            parameters[4].Value = model.isread;                        
+            parameters[5].Value = model.ishot;                        
+            parameters[6].Value = model.createman;                        
+            parameters[7].Value = model.createtime;                        
+			            DbHelperMySQL.ExecuteSql(strSql.ToString(),parameters);
+            			
+		}
+		
+		
+		/// <summary>
+		/// 更新一条数据
+		/// </summary>
+		public bool Update(Light.Model.newsinfo model)
+		{
+			StringBuilder strSql=new StringBuilder();
+			strSql.Append("update newsinfo set ");
+			                        
+            strSql.Append(" id = @id , ");                                    
+            strSql.Append(" title = @title , ");                                    
+            strSql.Append(" content = @content , ");                                    
+            strSql.Append(" subtitle = @subtitle , ");                                    
+            strSql.Append(" isread = @isread , ");                                    
+            strSql.Append(" ishot = @ishot , ");                                    
+            strSql.Append(" createman = @createman , ");                                    
+            strSql.Append(" createtime = @createtime  ");            			
+			strSql.Append(" where id=@id  ");
+						
+MySqlParameter[] parameters = {
+			            new MySqlParameter("@id", MySqlDbType.Int32,10) ,            
+                        new MySqlParameter("@title", MySqlDbType.VarChar,500) ,            
+                        new MySqlParameter("@content", MySqlDbType.VarChar,500) ,            
+                        new MySqlParameter("@subtitle", MySqlDbType.VarChar,500) ,            
+                        new MySqlParameter("@isread", MySqlDbType.Bit) ,            
+                        new MySqlParameter("@ishot", MySqlDbType.Bit) ,            
+                        new MySqlParameter("@createman", MySqlDbType.Int32,10) ,            
+                        new MySqlParameter("@createtime", MySqlDbType.DateTime)             
+              
+            };
+						            
+            parameters[0].Value = model.id;                        
+            parameters[1].Value = model.title;                        
+            parameters[2].Value = model.content;                        
+            parameters[3].Value = model.subtitle;                        
+            parameters[4].Value = model.isread;                        
+            parameters[5].Value = model.ishot;                        
+            parameters[6].Value = model.createman;                        
+            parameters[7].Value = model.createtime;                        
+            int rows=DbHelperMySQL.ExecuteSql(strSql.ToString(),parameters);
+			if (rows > 0)
+			{
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		}
+		
+		
+		/// <summary>
+		/// 删除一条数据
+		/// </summary>
+		public bool Delete(int id)
+		{
+			
+			StringBuilder strSql=new StringBuilder();
+			strSql.Append("delete from newsinfo ");
+			strSql.Append(" where id=@id ");
+						MySqlParameter[] parameters = {
+					new MySqlParameter("@id", MySqlDbType.Int32,10)			};
+			parameters[0].Value = id;
+
+
+			int rows=DbHelperMySQL.ExecuteSql(strSql.ToString(),parameters);
+			if (rows > 0)
+			{
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		}
+		
+				
+		
+		/// <summary>
+		/// 得到一个对象实体
+		/// </summary>
+		public Light.Model.newsinfo GetModel(int id)
+		{
+			
+			StringBuilder strSql=new StringBuilder();
+			strSql.Append("select id, title, content, subtitle, isread, ishot, createman, createtime  ");			
+			strSql.Append("  from newsinfo ");
+			strSql.Append(" where id=@id ");
+						MySqlParameter[] parameters = {
+					new MySqlParameter("@id", MySqlDbType.Int32,10)			};
+			parameters[0].Value = id;
+
+			
+			Light.Model.newsinfo model=new Light.Model.newsinfo();
+			DataSet ds=DbHelperMySQL.Query(strSql.ToString(),parameters);
+			
+			if(ds.Tables[0].Rows.Count>0)
+			{
+												if(ds.Tables[0].Rows[0]["id"].ToString()!="")
+				{
+					model.id=int.Parse(ds.Tables[0].Rows[0]["id"].ToString());
+				}
+																																				model.title= ds.Tables[0].Rows[0]["title"].ToString();
+																																																								model.subtitle= ds.Tables[0].Rows[0]["subtitle"].ToString();
+																																												if(ds.Tables[0].Rows[0]["isread"].ToString()!="")
+				{
+					if((ds.Tables[0].Rows[0]["isread"].ToString()=="1")||(ds.Tables[0].Rows[0]["isread"].ToString().ToLower()=="true"))
+					{
+					model.isread= true;
+					}
+					else
+					{
+					model.isread= false;
+					}
+				}
+																																if(ds.Tables[0].Rows[0]["ishot"].ToString()!="")
+				{
+					if((ds.Tables[0].Rows[0]["ishot"].ToString()=="1")||(ds.Tables[0].Rows[0]["ishot"].ToString().ToLower()=="true"))
+					{
+					model.ishot= true;
+					}
+					else
+					{
+					model.ishot= false;
+					}
+				}
+																if(ds.Tables[0].Rows[0]["createman"].ToString()!="")
+				{
+					model.createman=int.Parse(ds.Tables[0].Rows[0]["createman"].ToString());
+				}
+																																if(ds.Tables[0].Rows[0]["createtime"].ToString()!="")
+				{
+					model.createtime=DateTime.Parse(ds.Tables[0].Rows[0]["createtime"].ToString());
+				}
+																														
+				return model;
+			}
+			else
+			{
+				return null;
+			}
+		}
+		
+		
+		/// <summary>
+		/// 获得数据列表
+		/// </summary>
+		public DataSet GetList(string strWhere)
+		{
+			StringBuilder strSql=new StringBuilder();
+			strSql.Append("select * ");
+			strSql.Append(" FROM newsinfo ");
+			if(strWhere.Trim()!="")
+			{
+				strSql.Append(" where "+strWhere);
+			}
+			return DbHelperMySQL.Query(strSql.ToString());
+		}
+		
+		/// <summary>
+		/// 获得前几行数据
+		/// </summary>
+		public DataSet GetList(int Top,string strWhere,string filedOrder)
+		{
+			StringBuilder strSql=new StringBuilder();
+			strSql.Append("select ");
+			if(Top>0)
+			{
+				strSql.Append(" top "+Top.ToString());
+			}
+			strSql.Append(" * ");
+			strSql.Append(" FROM newsinfo ");
+			if(strWhere.Trim()!="")
+			{
+				strSql.Append(" where "+strWhere);
+			}
+			strSql.Append(" order by " + filedOrder);
+			return DbHelperMySQL.Query(strSql.ToString());
+		}
+
+   
+	}
+}
+
